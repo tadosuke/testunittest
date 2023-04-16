@@ -1,8 +1,8 @@
-"""hoge のテスト."""
+"""基本的な呼び出しを確認するテスト."""
 
 import unittest
 
-import hoge
+import basic
 
 
 # モジュール変数
@@ -11,7 +11,7 @@ module_value = 0
 
 def setUpModule():
     """モジュールのテスト開始時に一度だけ呼ばれる."""
-    print('\n*** setUpModule')
+    print('\n*** setUpModule(basic)')
 
     global module_value
     module_value = 5
@@ -19,7 +19,7 @@ def setUpModule():
 
 def tearDownModule():
     """モジュールのテスト終了時に一度だけ呼ばれる."""
-    print('*** tearDownModule')
+    print('*** tearDownModule(basic)')
 
 
 class TestModuleFunc(unittest.TestCase):
@@ -40,17 +40,17 @@ class TestModuleFunc(unittest.TestCase):
 
     def test_add(self):
         print(f'{self.id()}')
-        self.assertEqual(3, hoge.add(1, 2))
-        # self.assertEqual(4, hoge.add(1, 2))  失敗するテスト
-        self.assertNotEqual(2, hoge.add(1, 2))
+        self.assertEqual(3, basic.add(1, 2))
+        # self.assertEqual(4, basic.add(1, 2))  失敗するテスト
+        self.assertNotEqual(2, basic.add(1, 2))
 
         # setUpModule で設定した値が有効
         self.assertEqual(5, module_value)
 
     def test_sub(self):
         print(f'{self.id()}')
-        self.assertEqual(2, hoge.sub(3, 1))
-        self.assertNotEqual(1, hoge.sub(3, 1))
+        self.assertEqual(2, basic.sub(3, 1))
+        self.assertNotEqual(1, basic.sub(3, 1))
 
 
 class TestMyClass(unittest.TestCase):
@@ -66,7 +66,7 @@ class TestMyClass(unittest.TestCase):
 
     def setUp(self):
         print('\n* setUp(MyClass)')
-        self.my_class = hoge.MyClass(3)
+        self.my_class = basic.MyClass(3)
 
     def tearDown(self):
         print('* tearDown(MyClass)')
