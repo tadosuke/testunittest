@@ -39,6 +39,14 @@ class TestMyClass(unittest.TestCase):
             self.my_class.outer1()
             mp_inner.assert_called()  # mp_inner が呼ばれたか
 
+    @mock.patch('patch.MyClass._inner1')
+    def test_outer_decorator(self, mp_inner):
+        # mock で my_class オブジェクトの _inner メソッドを乗っ取る(デコレータ)
+        print(f'{self.id()}')
+
+        self.my_class.outer1()
+        mp_inner.assert_called()  # mp_inner が呼ばれたか
+
     def test_outer_multiple(self):
         # 複数の関数をまとめて乗っ取る
         print(f'{self.id()}')
@@ -60,14 +68,6 @@ class TestMyClass(unittest.TestCase):
 
             self.assertFalse('_inner2' in mp)  # DEFAULT を指定していないので、モックは生成されない
             self.my_class.outer2()  # _inner2 の代わりに mock_inner2 が呼ばれる
-
-    @mock.patch('patch.MyClass._inner1')
-    def test_outer_decorator(self, mp_inner):
-        # mock で my_class オブジェクトの _inner メソッドを乗っ取る(デコレータ)
-        print(f'{self.id()}')
-
-        self.my_class.outer1()
-        mp_inner.assert_called()  # mp_inner が呼ばれたか
 
     def test_outer_arg(self):
         # 内部関数の引数を確認する
