@@ -136,5 +136,26 @@ class TestMyClass(unittest.TestCase):
         # mock_myclass.outer1()
 
 
+class TestMyClassStartStop(unittest.TestCase):
+    # patch.start/stop を使う例
+
+    @classmethod
+    def setUpClass(cls):
+        patcher = mock.patch('patch.MyClass._inner1')
+        patcher.return_value = 0
+        patcher.start()
+
+        # setUpClass 内で例外が発生した場合、
+        # tearDownClass が呼ばれないので、パッチが残りっぱなしになる
+        # addClassCleanup に登録しておけば、例外発生時も呼ばれる
+        cls.addClassCleanup(mock.patch.stopall)
+
+    def test_outer(self):
+        # setUpClass で設定したモックが生きている
+        myclass = patch.MyClass(0)
+        self.assertIsInstance(myclass._inner1, MagicMock)
+        self.assertNotIsInstance(myclass._inner2, MagicMock)
+
+
 if __name__ == '__main__':
     unittest.main()
