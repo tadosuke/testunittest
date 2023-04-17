@@ -39,6 +39,28 @@ class TestMyClass(unittest.TestCase):
             self.my_class.outer1()
             mp_inner.assert_called()  # mp_inner が呼ばれたか
 
+    def test_outer_multiple(self):
+        # 複数の関数をまとめて乗っ取る
+        print(f'{self.id()}')
+
+        def mock_inner2(a, b, c):
+            print('mock_inner2')
+            pass
+
+        # 同じモジュール・オブジェクト以下のメソッドなら、まとめてパッチできる
+        with mock.patch.multiple(
+                self.my_class,  # 対象のモジュールまたはオブジェクト
+                _inner1=mock.DEFAULT,  # モックを生成する場合は DEFAULT
+                _inner2=mock_inner2) as mp:  # 他の関数を代わりに呼びたい場合
+            mp_inner1 = mp['_inner1']  # 関数名をキーにしてモックを取得できる
+            mp_inner1.return_value = 0  # 通常のモック同様に return_value なども変更できる
+            ret = self.my_class.outer1()
+            self.assertEqual(1, ret)
+            mp_inner1.assert_called_with(2)  # 呼び出し確認
+
+            self.assertFalse('_inner2' in mp)  # DEFAULT を指定していないので、モックは生成されない
+            self.my_class.outer2()  # _inner2 の代わりに mock_inner2 が呼ばれる
+
     @mock.patch('patch.MyClass._inner1')
     def test_outer_decorator(self, mp_inner):
         # mock で my_class オブジェクトの _inner メソッドを乗っ取る(デコレータ)
