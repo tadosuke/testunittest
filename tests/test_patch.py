@@ -135,6 +135,19 @@ class TestMyClass(unittest.TestCase):
         mock_myclass.outer1()
         # mock_myclass.outer1()
 
+    def test_get_property(self):
+        """ プロパティを置き換えようとするとエラーになる
+        with mock.patch.object(self.my_class, 'value', return_value=5):
+            ret = self.my_class.value
+            self.assertEqual(5, ret)
+        """
+
+        # PropertyMock を指定すれば、プロパティを置き換えられる
+        # ただし mock.patch.object は使えない
+        with mock.patch('patch.MyClass.value', new_callable=mock.PropertyMock, return_value=5):
+            ret = self.my_class.value
+            self.assertEqual(5, ret)
+
 
 class TestMyClassStartStop(unittest.TestCase):
     # patch.start/stop を使う例

@@ -17,3 +17,7 @@ class MyClass:
 
     def _inner2(self, a: int, b: int, c: int) -> None:
         pass
+
+    @property
+    def value(self) -> int:
+        return self._value
