@@ -148,6 +148,18 @@ class TestMyClass(unittest.TestCase):
             ret = self.my_class.value
             self.assertEqual(5, ret)
 
+    def test_sentinel(self):
+        new_my_class = patch.MyClass(0)
+        with mock.patch.object(self.my_class, '_inner_get', return_value=new_my_class):
+            ret_my_class = self.my_class.outer_get()
+            self.assertIs(new_my_class, ret_my_class)
+
+        # MyClass を作るのがめんどくさいので、sentinel に置き換える
+        sentinel = mock.sentinel  # 型指定も不要
+        with mock.patch.object(self.my_class, '_inner_get', return_value=sentinel):
+            ret_my_class = self.my_class.outer_get()
+            self.assertIs(sentinel, ret_my_class)  # Is 比較もできる
+
 
 class TestMyClassStartStop(unittest.TestCase):
     # patch.start/stop を使う例

@@ -1,4 +1,5 @@
 """mock.patch の動作を確認するテスト(実装)."""
+from __future__ import annotations
 
 
 class MyClass:
@@ -21,3 +22,9 @@ class MyClass:
     @property
     def value(self) -> int:
         return self._value
+
+    def outer_get(self):
+        return self._inner_get()
+
+    def _inner_get(self) -> MyClass:
+        return MyClass(1)
